@@ -1,0 +1,13 @@
+[Unit]
+Description=CLIProxyAPI usage dashboard
+After=network.target
+
+[Service]
+EnvironmentFile=%h/.config/usage-dash/env
+Environment=DASH_BIND=127.0.0.1:8318
+ExecStart=/usr/bin/python3 %h/cliproxy-dashboard/usage_dash.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=default.target
