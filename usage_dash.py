@@ -427,8 +427,7 @@ def latency_plot(now, rng):
         p.key.append(("line", col, pv))
     return p.svg()
 
-def heatmap(now):
-    days = 7
+def heatmap(now, days=7):
     today0 = time.mktime(time.localtime(now)[:3] + (0, 0, 0, 0, 0, -1))
     cell = {}
     for ts, tt in q("select ts, ttotal from req where ts >= ?", (today0 - (days - 1) * 86400,)):
@@ -442,7 +441,8 @@ def heatmap(now):
          '<text x="%d" y="14" class="ti" text-anchor="middle">set pm3d map  # requests by day x hour</text>' % (w // 2 - 15)]
     for d in range(days):
         dt = today0 - (days - 1 - d) * 86400
-        o.append('<text x="%d" y="%.1f" class="tl" text-anchor="end">%s</text>' % (l - 5, t + d * ch + ch / 2 + 3.5, time.strftime("%a %d", time.localtime(dt + 7200))))
+        if ch >= 12 or d % 4 == days % 4:
+            o.append('<text x="%d" y="%.1f" class="tl" text-anchor="end">%s</text>' % (l - 5, t + d * ch + ch / 2 + 3.5, time.strftime("%a %d", time.localtime(dt + 7200))))
         for hr in range(24):
             n = cell.get((d, hr), 0)
             o.append('<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" fill="%s" stroke="#ddd" stroke-width=".5"><title>%s %02d:00 &#8212; %d req</title></rect>' % (
@@ -528,7 +528,7 @@ range: {nav}</td></tr></table><hr>"""
     body = [hdr,
         '<a name="accounts"></a>', section("1. Accounts and limits", accounts_table(now)),
         '<a name="resets"></a>', section("2. Reset schedule", reset_timeline(now)),
-        '<a name="traffic"></a>', section("3. Traffic &mdash; last %s" % rng, summary + two(pr, pt) + two(latency_plot(now, rng), heatmap(now))),
+        '<a name="traffic"></a>', section("3. Traffic &mdash; last %s" % rng, summary + two(pr, pt) + two(latency_plot(now, rng), heatmap(now, 28 if rng == "30d" else 7))),
         '<a name="models"></a>', section("4. Breakdown &mdash; last %s" % rng,
             two(util_plot(now, rng, "5h"), util_plot(now, rng, "7d")) +
             two('<div class="cell">' + by_endpoint(since) + "<br>" + status_hist(since) + "</div>",
@@ -583,8 +583,8 @@ class H(BaseHTTPRequestHandler):
                         "totals_24h": totals(now - 86400)}
                 self.send(200, json.dumps(data, indent=1), "application/json")
             elif u.path == "/":
-                r = parse_qs(u.query).get("r", ["24h"])[0]
-                self.send(200, page(r if r in RANGES else "24h"), "text/html; charset=utf-8")
+                r = parse_qs(u.query).get("r", ["30d"])[0]
+                self.send(200, page(r if r in RANGES else "30d"), "text/html; charset=utf-8")
             else:
                 self.send(404, "not found\n", "text/plain")
         except Exception as e:
