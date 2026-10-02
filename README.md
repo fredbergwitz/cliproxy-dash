@@ -1,4 +1,4 @@
-# cliproxy-dashboard
+# cliproxy-dash
 
 A tiny usage dashboard for [CLIProxyAPI](https://github.com/router-for-me/CLIProxyAPI), styled like [gnuplot.info](http://gnuplot.info/).
 One Python file, standard library only, no JavaScript.
@@ -36,5 +36,8 @@ CPA_MGMT_KEY=pick-a-long-random-string python3 usage_dash.py
 A systemd user unit is in `systemd/`. The page has no login; bind it to localhost or a private network.
 
 The proxy's usage queue is drained on read, so run only one collector. History starts when the dashboard starts.
+
+> CLIProxyAPI exposes subscription sign-ins (Claude, Codex) through an API. That is a third-party integration and may not be
+> approved by the providers; account-enforcement risk is yours. This dashboard only reads the proxy's own stats.
 
 MIT

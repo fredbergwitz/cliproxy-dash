@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""cliproxy-dashboard: tiny gnuplot.info-styled usage dashboard for CLIProxyAPI.
+"""cliproxy-dash: tiny gnuplot.info-styled usage dashboard for CLIProxyAPI.
 
 Polls the proxy's management API (usage queue + auth files), keeps history in
 SQLite, and serves one server-rendered HTML page with inline SVG plots.
