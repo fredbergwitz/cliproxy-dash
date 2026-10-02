@@ -35,6 +35,8 @@ CPA_MGMT_KEY=pick-a-long-random-string python3 usage_dash.py
 
 A systemd user unit is in `systemd/`. The page has no login; bind it to localhost or a private network.
 
+To backfill history from local Claude Code / Codex CLI session logs (token counts only, tagged `local session log`): `python3 import_logs.py` (`--dry-run` first).
+
 The proxy's usage queue is drained on read, so run only one collector. History starts when the dashboard starts.
 
 > CLIProxyAPI exposes subscription sign-ins (Claude, Codex) through an API. That is a third-party integration and may not be
